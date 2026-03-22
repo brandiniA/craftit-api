@@ -30,7 +30,10 @@ class Product < ApplicationRecord
   belongs_to :category, optional: true
   has_many :images, class_name: "ProductImage", dependent: :destroy
   has_one :inventory, dependent: :destroy
-  # Commerce associations (reviews, cart_items, wishlist_items, order_items) added in Module 2B.
+  has_many :cart_items, dependent: :destroy
+  has_many :wishlist_items, dependent: :destroy
+  has_many :reviews, dependent: :destroy
+  has_many :order_items, dependent: :restrict_with_error
 
   validates :name, presence: true
   validates :slug, presence: true, uniqueness: true

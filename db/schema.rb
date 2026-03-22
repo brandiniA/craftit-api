@@ -10,9 +10,33 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_03_22_192949) do
+ActiveRecord::Schema[8.1].define(version: 2026_03_22_200008) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
+
+  create_table "addresses", force: :cascade do |t|
+    t.string "city", null: false
+    t.string "country", default: "MX", null: false
+    t.datetime "created_at", null: false
+    t.bigint "customer_profile_id", null: false
+    t.boolean "is_default", default: false, null: false
+    t.string "label"
+    t.string "state", null: false
+    t.string "street", null: false
+    t.datetime "updated_at", null: false
+    t.string "zip_code", null: false
+    t.index [ "customer_profile_id" ], name: "index_addresses_on_customer_profile_id"
+  end
+
+  create_table "cart_items", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.bigint "customer_profile_id", null: false
+    t.bigint "product_id", null: false
+    t.integer "quantity", default: 1, null: false
+    t.datetime "updated_at", null: false
+    t.index [ "customer_profile_id" ], name: "index_cart_items_on_customer_profile_id"
+    t.index [ "product_id" ], name: "index_cart_items_on_product_id"
+  end
 
   create_table "categories", force: :cascade do |t|
     t.datetime "created_at", null: false
@@ -46,6 +70,48 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_22_192949) do
     t.index [ "product_id" ], name: "index_inventories_on_product_id", unique: true
   end
 
+  create_table "order_items", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.bigint "order_id", null: false
+    t.decimal "price_snapshot", precision: 10, scale: 2, null: false
+    t.bigint "product_id", null: false
+    t.string "product_name_snapshot", null: false
+    t.integer "quantity", null: false
+    t.datetime "updated_at", null: false
+    t.index [ "order_id" ], name: "index_order_items_on_order_id"
+    t.index [ "product_id" ], name: "index_order_items_on_product_id"
+  end
+
+  create_table "orders", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.string "customer_email_snapshot"
+    t.string "customer_name_snapshot"
+    t.bigint "customer_profile_id", null: false
+    t.string "order_number", null: false
+    t.jsonb "shipping_address_snapshot", default: {}
+    t.decimal "shipping_cost", precision: 10, scale: 2, default: "0.0", null: false
+    t.integer "status", default: 0, null: false
+    t.decimal "subtotal", precision: 10, scale: 2, null: false
+    t.decimal "tax", precision: 10, scale: 2, default: "0.0", null: false
+    t.decimal "tax_rate_snapshot", precision: 5, scale: 4, default: "0.16", null: false
+    t.decimal "total", precision: 10, scale: 2, null: false
+    t.datetime "updated_at", null: false
+    t.index [ "customer_profile_id" ], name: "index_orders_on_customer_profile_id"
+    t.index [ "order_number" ], name: "index_orders_on_order_number", unique: true
+  end
+
+  create_table "payments", force: :cascade do |t|
+    t.decimal "amount", precision: 10, scale: 2, null: false
+    t.datetime "created_at", null: false
+    t.string "currency", default: "MXN", null: false
+    t.bigint "order_id", null: false
+    t.string "provider", null: false
+    t.string "provider_payment_id"
+    t.integer "status", default: 0, null: false
+    t.datetime "updated_at", null: false
+    t.index [ "order_id" ], name: "index_payments_on_order_id"
+  end
+
   create_table "product_images", force: :cascade do |t|
     t.string "alt_text"
     t.datetime "created_at", null: false
@@ -74,8 +140,55 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_22_192949) do
     t.index [ "slug" ], name: "index_products_on_slug", unique: true
   end
 
+  create_table "reviews", force: :cascade do |t|
+    t.text "body"
+    t.datetime "created_at", null: false
+    t.bigint "customer_profile_id", null: false
+    t.boolean "is_verified_purchase", default: false, null: false
+    t.bigint "product_id", null: false
+    t.integer "rating", null: false
+    t.string "title"
+    t.datetime "updated_at", null: false
+    t.index [ "customer_profile_id" ], name: "index_reviews_on_customer_profile_id"
+    t.index [ "product_id" ], name: "index_reviews_on_product_id"
+  end
+
+  create_table "shipments", force: :cascade do |t|
+    t.string "carrier"
+    t.datetime "created_at", null: false
+    t.date "estimated_delivery"
+    t.bigint "order_id", null: false
+    t.integer "status", default: 0, null: false
+    t.string "tracking_number"
+    t.string "tracking_url"
+    t.datetime "updated_at", null: false
+    t.index [ "order_id" ], name: "index_shipments_on_order_id"
+  end
+
+  create_table "wishlist_items", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.bigint "customer_profile_id", null: false
+    t.bigint "product_id", null: false
+    t.datetime "updated_at", null: false
+    t.index [ "customer_profile_id", "product_id" ], name: "index_wishlist_items_on_customer_profile_id_and_product_id", unique: true
+    t.index [ "customer_profile_id" ], name: "index_wishlist_items_on_customer_profile_id"
+    t.index [ "product_id" ], name: "index_wishlist_items_on_product_id"
+  end
+
+  add_foreign_key "addresses", "customer_profiles"
+  add_foreign_key "cart_items", "customer_profiles"
+  add_foreign_key "cart_items", "products"
   add_foreign_key "categories", "categories", column: "parent_category_id"
   add_foreign_key "inventories", "products"
+  add_foreign_key "order_items", "orders"
+  add_foreign_key "order_items", "products"
+  add_foreign_key "orders", "customer_profiles"
+  add_foreign_key "payments", "orders"
   add_foreign_key "product_images", "products"
   add_foreign_key "products", "categories"
+  add_foreign_key "reviews", "customer_profiles"
+  add_foreign_key "reviews", "products"
+  add_foreign_key "shipments", "orders"
+  add_foreign_key "wishlist_items", "customer_profiles"
+  add_foreign_key "wishlist_items", "products"
 end

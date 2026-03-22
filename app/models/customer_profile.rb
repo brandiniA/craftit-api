@@ -16,4 +16,10 @@
 
 class CustomerProfile < ApplicationRecord
   validates :auth_user_id, presence: true, uniqueness: true
+
+  has_many :addresses, dependent: :destroy
+  has_many :cart_items, dependent: :destroy
+  has_many :wishlist_items, dependent: :destroy
+  has_many :reviews, dependent: :destroy
+  has_many :orders, dependent: :restrict_with_error
 end
