@@ -1,6 +1,8 @@
 module Api
   module V1
     class BaseController < ApplicationController
+      include Pagy::Backend
+
       rescue_from ActiveRecord::RecordNotFound, with: :handle_not_found
       rescue_from ActiveRecord::RecordInvalid, with: :handle_record_invalid
       rescue_from ActionController::ParameterMissing, with: :handle_bad_request
@@ -29,6 +31,15 @@ module Api
 
       def authenticate!
         render_unauthorized unless current_auth_user_id
+      end
+
+      def pagination_meta(pagy)
+        {
+          page: pagy.page,
+          limit: pagy.limit,
+          total_pages: pagy.pages,
+          total_count: pagy.count
+        }
       end
     end
   end
