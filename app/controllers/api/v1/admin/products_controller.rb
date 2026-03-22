@@ -46,7 +46,44 @@ module Api
         end
 
         def images
-          head :not_implemented
+          product = ::Product.find(params[:id])
+          uploaded = params.require(:file)
+
+          unless uploaded.content_type.to_s.start_with?("image/")
+            return render_error(
+              code: "validation_error",
+              message: "File must be an image",
+              status: :unprocessable_entity
+            )
+          end
+
+          position = if params[:position].present?
+            params[:position].to_i
+          else
+            product.images.maximum(:position).to_i + 1
+          end
+
+          image = product.images.build(alt_text: params[:alt_text], position: position)
+          image.file.attach(uploaded)
+          image.save!
+          image.update!(
+            url: rails_blob_url(
+              image.file.blob,
+              host: request.host_with_port,
+              protocol: request.scheme
+            )
+          )
+
+          render_created(
+            {
+              id: image.id,
+              url: image.url,
+              alt_text: image.alt_text,
+              position: image.position
+            }
+          )
+        rescue ActiveRecord::RecordInvalid => e
+          render_validation_error(e.record)
         end
 
         private

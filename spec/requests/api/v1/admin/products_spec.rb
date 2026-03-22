@@ -71,4 +71,37 @@ RSpec.describe "Api::V1::Admin::Products", type: :request do
       expect(product.reload.is_active).to be false
     end
   end
+
+  describe "POST /api/v1/admin/products/:id/images" do
+    it "uploads an image and persists ProductImage with blob URL" do
+      product = create(:product)
+
+      admin_post "/api/v1/admin/products/#{product.id}/images",
+        params: {
+          file: fixture_file_upload(Rails.root.join("spec/fixtures/files/1x1.png"), "image/png"),
+          alt_text: "Hero shot"
+        }
+
+      expect(response).to have_http_status(:created)
+      expect(json_data[:url]).to include("/rails/active_storage/blobs/")
+      expect(json_data[:alt_text]).to eq("Hero shot")
+      expect(product.reload.images.count).to eq(1)
+    end
+
+    it "returns 422 for non-image upload" do
+      product = create(:product)
+      tempfile = Tempfile.new([ "note", ".txt" ])
+      tempfile.write("hello")
+      tempfile.rewind
+
+      admin_post "/api/v1/admin/products/#{product.id}/images",
+        params: {
+          file: Rack::Test::UploadedFile.new(tempfile.path, "text/plain", original_filename: "note.txt")
+        }
+
+      expect(response).to have_http_status(:unprocessable_entity)
+    ensure
+      tempfile&.close!
+    end
+  end
 end

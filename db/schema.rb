@@ -10,9 +10,37 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_03_22_200008) do
+ActiveRecord::Schema[8.1].define(version: 2026_03_22_212454) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
+
+  create_table "active_storage_attachments", force: :cascade do |t|
+    t.bigint "blob_id", null: false
+    t.datetime "created_at", null: false
+    t.string "name", null: false
+    t.bigint "record_id", null: false
+    t.string "record_type", null: false
+    t.index ["blob_id"], name: "index_active_storage_attachments_on_blob_id"
+    t.index ["record_type", "record_id", "name", "blob_id"], name: "index_active_storage_attachments_uniqueness", unique: true
+  end
+
+  create_table "active_storage_blobs", force: :cascade do |t|
+    t.bigint "byte_size", null: false
+    t.string "checksum"
+    t.string "content_type"
+    t.datetime "created_at", null: false
+    t.string "filename", null: false
+    t.string "key", null: false
+    t.text "metadata"
+    t.string "service_name", null: false
+    t.index ["key"], name: "index_active_storage_blobs_on_key", unique: true
+  end
+
+  create_table "active_storage_variant_records", force: :cascade do |t|
+    t.bigint "blob_id", null: false
+    t.string "variation_digest", null: false
+    t.index ["blob_id", "variation_digest"], name: "index_active_storage_variant_records_uniqueness", unique: true
+  end
 
   create_table "addresses", force: :cascade do |t|
     t.string "city", null: false
@@ -25,7 +53,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_22_200008) do
     t.string "street", null: false
     t.datetime "updated_at", null: false
     t.string "zip_code", null: false
-    t.index [ "customer_profile_id" ], name: "index_addresses_on_customer_profile_id"
+    t.index ["customer_profile_id"], name: "index_addresses_on_customer_profile_id"
   end
 
   create_table "cart_items", force: :cascade do |t|
@@ -34,8 +62,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_22_200008) do
     t.bigint "product_id", null: false
     t.integer "quantity", default: 1, null: false
     t.datetime "updated_at", null: false
-    t.index [ "customer_profile_id" ], name: "index_cart_items_on_customer_profile_id"
-    t.index [ "product_id" ], name: "index_cart_items_on_product_id"
+    t.index ["customer_profile_id"], name: "index_cart_items_on_customer_profile_id"
+    t.index ["product_id"], name: "index_cart_items_on_product_id"
   end
 
   create_table "categories", force: :cascade do |t|
@@ -47,8 +75,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_22_200008) do
     t.integer "position", default: 0
     t.string "slug", null: false
     t.datetime "updated_at", null: false
-    t.index [ "parent_category_id" ], name: "index_categories_on_parent_category_id"
-    t.index [ "slug" ], name: "index_categories_on_slug", unique: true
+    t.index ["parent_category_id"], name: "index_categories_on_parent_category_id"
+    t.index ["slug"], name: "index_categories_on_slug", unique: true
   end
 
   create_table "customer_profiles", force: :cascade do |t|
@@ -57,7 +85,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_22_200008) do
     t.datetime "created_at", null: false
     t.string "phone"
     t.datetime "updated_at", null: false
-    t.index [ "auth_user_id" ], name: "index_customer_profiles_on_auth_user_id", unique: true
+    t.index ["auth_user_id"], name: "index_customer_profiles_on_auth_user_id", unique: true
   end
 
   create_table "inventories", force: :cascade do |t|
@@ -67,7 +95,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_22_200008) do
     t.integer "reserved_stock", default: 0, null: false
     t.integer "stock", default: 0, null: false
     t.datetime "updated_at", null: false
-    t.index [ "product_id" ], name: "index_inventories_on_product_id", unique: true
+    t.index ["product_id"], name: "index_inventories_on_product_id", unique: true
   end
 
   create_table "order_items", force: :cascade do |t|
@@ -78,8 +106,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_22_200008) do
     t.string "product_name_snapshot", null: false
     t.integer "quantity", null: false
     t.datetime "updated_at", null: false
-    t.index [ "order_id" ], name: "index_order_items_on_order_id"
-    t.index [ "product_id" ], name: "index_order_items_on_product_id"
+    t.index ["order_id"], name: "index_order_items_on_order_id"
+    t.index ["product_id"], name: "index_order_items_on_product_id"
   end
 
   create_table "orders", force: :cascade do |t|
@@ -96,8 +124,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_22_200008) do
     t.decimal "tax_rate_snapshot", precision: 5, scale: 4, default: "0.16", null: false
     t.decimal "total", precision: 10, scale: 2, null: false
     t.datetime "updated_at", null: false
-    t.index [ "customer_profile_id" ], name: "index_orders_on_customer_profile_id"
-    t.index [ "order_number" ], name: "index_orders_on_order_number", unique: true
+    t.index ["customer_profile_id"], name: "index_orders_on_customer_profile_id"
+    t.index ["order_number"], name: "index_orders_on_order_number", unique: true
   end
 
   create_table "payments", force: :cascade do |t|
@@ -109,7 +137,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_22_200008) do
     t.string "provider_payment_id"
     t.integer "status", default: 0, null: false
     t.datetime "updated_at", null: false
-    t.index [ "order_id" ], name: "index_payments_on_order_id"
+    t.index ["order_id"], name: "index_payments_on_order_id"
   end
 
   create_table "product_images", force: :cascade do |t|
@@ -118,8 +146,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_22_200008) do
     t.integer "position", default: 0
     t.bigint "product_id", null: false
     t.datetime "updated_at", null: false
-    t.string "url", null: false
-    t.index [ "product_id" ], name: "index_product_images_on_product_id"
+    t.string "url"
+    t.index ["product_id"], name: "index_product_images_on_product_id"
   end
 
   create_table "products", force: :cascade do |t|
@@ -134,10 +162,10 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_22_200008) do
     t.string "sku", null: false
     t.string "slug", null: false
     t.datetime "updated_at", null: false
-    t.index [ "category_id", "is_active" ], name: "index_products_on_category_id_and_is_active"
-    t.index [ "category_id" ], name: "index_products_on_category_id"
-    t.index [ "sku" ], name: "index_products_on_sku", unique: true
-    t.index [ "slug" ], name: "index_products_on_slug", unique: true
+    t.index ["category_id", "is_active"], name: "index_products_on_category_id_and_is_active"
+    t.index ["category_id"], name: "index_products_on_category_id"
+    t.index ["sku"], name: "index_products_on_sku", unique: true
+    t.index ["slug"], name: "index_products_on_slug", unique: true
   end
 
   create_table "reviews", force: :cascade do |t|
@@ -149,8 +177,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_22_200008) do
     t.integer "rating", null: false
     t.string "title"
     t.datetime "updated_at", null: false
-    t.index [ "customer_profile_id" ], name: "index_reviews_on_customer_profile_id"
-    t.index [ "product_id" ], name: "index_reviews_on_product_id"
+    t.index ["customer_profile_id"], name: "index_reviews_on_customer_profile_id"
+    t.index ["product_id"], name: "index_reviews_on_product_id"
   end
 
   create_table "shipments", force: :cascade do |t|
@@ -162,7 +190,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_22_200008) do
     t.string "tracking_number"
     t.string "tracking_url"
     t.datetime "updated_at", null: false
-    t.index [ "order_id" ], name: "index_shipments_on_order_id"
+    t.index ["order_id"], name: "index_shipments_on_order_id"
   end
 
   create_table "wishlist_items", force: :cascade do |t|
@@ -170,11 +198,13 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_22_200008) do
     t.bigint "customer_profile_id", null: false
     t.bigint "product_id", null: false
     t.datetime "updated_at", null: false
-    t.index [ "customer_profile_id", "product_id" ], name: "index_wishlist_items_on_customer_profile_id_and_product_id", unique: true
-    t.index [ "customer_profile_id" ], name: "index_wishlist_items_on_customer_profile_id"
-    t.index [ "product_id" ], name: "index_wishlist_items_on_product_id"
+    t.index ["customer_profile_id", "product_id"], name: "index_wishlist_items_on_customer_profile_id_and_product_id", unique: true
+    t.index ["customer_profile_id"], name: "index_wishlist_items_on_customer_profile_id"
+    t.index ["product_id"], name: "index_wishlist_items_on_product_id"
   end
 
+  add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "addresses", "customer_profiles"
   add_foreign_key "cart_items", "customer_profiles"
   add_foreign_key "cart_items", "products"

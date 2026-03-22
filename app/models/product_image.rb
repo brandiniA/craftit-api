@@ -8,7 +8,7 @@
 #  position   :integer          default(0)
 #  product_id :bigint           not null
 #  updated_at :datetime         not null
-#  url        :string           not null
+#  url        :string
 #
 # Indexes
 #
@@ -18,7 +18,9 @@
 class ProductImage < ApplicationRecord
   belongs_to :product
 
-  validates :url, presence: true
+  has_one_attached :file
+
+  validates :url, presence: true, unless: -> { file.attached? }
 
   scope :ordered, -> { order(:position) }
 end

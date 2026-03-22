@@ -1,4 +1,6 @@
 class ApplicationController < ActionController::API
+  include Rails.application.routes.url_helpers
+
   private
 
   def render_success(data, status: :ok, meta: nil)

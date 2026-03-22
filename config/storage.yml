@@ -1,0 +1,13 @@
+# Local disk (development / test / default production). Swap the production service
+# for :amazon or :s3 when you wire Supabase/S3 (same Active Storage API).
+test:
+  service: Disk
+  root: <%= Rails.root.join("tmp/storage") %>
+
+local:
+  service: Disk
+  root: <%= Rails.root.join("storage") %>
+
+production:
+  service: Disk
+  root: <%= Rails.root.join("storage") %>
