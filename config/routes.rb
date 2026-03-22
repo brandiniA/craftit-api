@@ -8,7 +8,7 @@ Rails.application.routes.draw do
       get "products/search", to: "products#search", as: :products_search
 
       resources :products, only: %i[index show], param: :slug do
-        get "reviews", to: "reviews#index", on: :member
+        resources :reviews, only: %i[index create]
       end
 
       resources :categories, only: %i[index show], param: :slug
@@ -25,6 +25,10 @@ Rails.application.routes.draw do
       resource :profile, only: [ :show, :update ], controller: "profile"
 
       resources :addresses, only: [ :index, :create, :update, :destroy ]
+
+      resources :orders, only: %i[index show create], param: :order_number do
+        get "shipment", to: "shipments#show", on: :member
+      end
     end
   end
 end

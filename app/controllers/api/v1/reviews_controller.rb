@@ -1,8 +1,10 @@
 module Api
   module V1
     class ReviewsController < BaseController
+      before_action :authenticate!, only: [ :create ]
+
       def index
-        product = ::Product.friendly.find(params[:slug])
+        product = ::Product.friendly.find(params[:product_slug])
         reviews = product.reviews.includes(:customer_profile)
           .order(created_at: :desc)
 
@@ -18,6 +20,24 @@ module Api
             total_count: product.reviews.count
           )
         )
+      end
+
+      def create
+        product = ::Product.friendly.find(params[:product_slug])
+        review = product.reviews.build(review_params)
+        review.customer_profile = current_customer_profile
+
+        if review.save
+          render_created(::ReviewSerializer.new(review).serializable_hash[:data])
+        else
+          render_validation_error(review)
+        end
+      end
+
+      private
+
+      def review_params
+        params.permit(:rating, :title, :body)
       end
     end
   end
