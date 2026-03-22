@@ -29,6 +29,25 @@ Rails.application.routes.draw do
       resources :orders, only: %i[index show create], param: :order_number do
         get "shipment", to: "shipments#show", on: :member
       end
+
+      namespace :admin do
+        get "dashboard/stats", to: "dashboard#stats"
+
+        resources :products, only: %i[index create update destroy] do
+          post :images, on: :member
+        end
+
+        resources :orders, only: [ :index ] do
+          patch :status, on: :member
+          post :shipment, on: :member
+        end
+
+        resources :inventory, only: %i[index update], controller: "inventory" do
+          get :low_stock, on: :collection, path: "low-stock"
+        end
+
+        resources :customers, only: %i[index show]
+      end
     end
   end
 end

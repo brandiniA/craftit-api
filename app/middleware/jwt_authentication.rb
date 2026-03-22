@@ -8,6 +8,7 @@ class JwtAuthentication
   def call(env)
     if Rails.env.test? && env["HTTP_AUTH_USER_ID"].present?
       env["auth_user_id"] = env["HTTP_AUTH_USER_ID"]
+      env["auth_user_email"] = env["HTTP_AUTH_USER_EMAIL"] if env["HTTP_AUTH_USER_EMAIL"].present?
       return @app.call(env)
     end
 
@@ -15,7 +16,10 @@ class JwtAuthentication
 
     if token
       payload = decode_token(token)
-      env["auth_user_id"] = payload&.dig("sub") if payload
+      if payload
+        env["auth_user_id"] = payload["sub"]
+        env["auth_user_email"] = payload["email"]
+      end
     end
 
     @app.call(env)
