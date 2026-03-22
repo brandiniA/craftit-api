@@ -6,6 +6,11 @@ plugins:
 
 AllCops:
   NewCops: enable
+  Exclude:
+    - db/schema.rb
+
+RSpec/NamedSubject:
+  Enabled: false
 
 # RSpec
 RSpec:

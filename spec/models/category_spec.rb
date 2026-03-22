@@ -36,7 +36,7 @@ RSpec.describe Category, type: :model do
 
     it "finds by slug using friendly_id" do
       category = create(:category, name: "Board Games")
-      found = Category.friendly.find("board-games")
+      found = described_class.friendly.find("board-games")
       expect(found).to eq(category)
     end
   end
