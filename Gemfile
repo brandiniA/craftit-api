@@ -17,7 +17,25 @@ gem "tzinfo-data", platforms: %i[ windows jruby ]
 gem "bootsnap", require: false
 
 # Use Rack CORS for handling Cross-Origin Resource Sharing (CORS), making cross-origin Ajax possible
-# gem "rack-cors"
+gem "rack-cors"
+
+# JSON serialization
+gem "jsonapi-serializer"
+
+# Pagination
+gem "pagy", "~> 9"
+
+# JWT verification
+gem "jwt", "~> 2.10"
+
+# HTTP client (for JWKS fetching)
+gem "faraday", "~> 2.12"
+
+# Slugs
+gem "friendly_id", "~> 5.5"
+
+# State machines (orders, shipments)
+gem "aasm", "~> 5.5"
 
 group :development, :test do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem
@@ -31,4 +49,17 @@ group :development, :test do
 
   # Omakase Ruby styling [https://github.com/rails/rubocop-rails-omakase/]
   gem "rubocop-rails-omakase", require: false
+
+  # Testing
+  gem "rspec-rails", "~> 8.0"
+  gem "factory_bot_rails"
+  gem "faker"
+
+  # N+1 detection
+  gem "bullet"
+end
+
+group :development do
+  # Schema annotations in model files
+  gem "annotate"
 end
