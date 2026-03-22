@@ -3,9 +3,23 @@
 #   docker compose up -d
 #   bin/rails db:prepare
 #
+# Adminer (DB UI): http://localhost:8080
+#   System: PostgreSQL  Server: postgres  User: postgres  Password: postgres
+#   Database: craftit_api_development (or craftit_api_test)
+#
 # Connection defaults match config/database.yml (postgres/postgres@localhost:5432).
 
 services:
+  adminer:
+    image: adminer:4
+    ports:
+      - "8080:8080"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      ADMINER_DEFAULT_SERVER: postgres
+
   postgres:
     image: postgres:17-alpine
     environment:
