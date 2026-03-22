@@ -10,9 +10,22 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_03_22_192533) do
+ActiveRecord::Schema[8.1].define(version: 2026_03_22_192610) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
+
+  create_table "categories", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.text "description"
+    t.string "image_url"
+    t.string "name", null: false
+    t.bigint "parent_category_id"
+    t.integer "position", default: 0
+    t.string "slug", null: false
+    t.datetime "updated_at", null: false
+    t.index ["parent_category_id"], name: "index_categories_on_parent_category_id"
+    t.index ["slug"], name: "index_categories_on_slug", unique: true
+  end
 
   create_table "customer_profiles", force: :cascade do |t|
     t.string "auth_user_id", null: false
@@ -22,4 +35,6 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_22_192533) do
     t.datetime "updated_at", null: false
     t.index ["auth_user_id"], name: "index_customer_profiles_on_auth_user_id", unique: true
   end
+
+  add_foreign_key "categories", "categories", column: "parent_category_id"
 end
