@@ -29,6 +29,14 @@ module Api
         request.env["auth_user_id"]
       end
 
+      def current_customer_profile
+        return nil unless current_auth_user_id
+
+        @current_customer_profile ||= ::CustomerProfile.find_or_create_by!(
+          auth_user_id: current_auth_user_id
+        )
+      end
+
       def authenticate!
         render_unauthorized unless current_auth_user_id
       end

@@ -6,6 +6,11 @@ class JwtAuthentication
   end
 
   def call(env)
+    if Rails.env.test? && env["HTTP_AUTH_USER_ID"].present?
+      env["auth_user_id"] = env["HTTP_AUTH_USER_ID"]
+      return @app.call(env)
+    end
+
     token = extract_token(env)
 
     if token

@@ -12,6 +12,19 @@ Rails.application.routes.draw do
       end
 
       resources :categories, only: %i[index show], param: :slug
+
+      resource :cart, only: [ :show ], controller: "cart" do
+        post :sync, on: :collection
+        resources :items, only: [ :create, :update, :destroy ], controller: "cart", as: :cart_items
+      end
+
+      resource :wishlist, only: [ :show ], controller: "wishlist" do
+        resources :items, only: [ :create, :destroy ], controller: "wishlist", as: :wishlist_items
+      end
+
+      resource :profile, only: [ :show, :update ], controller: "profile"
+
+      resources :addresses, only: [ :index, :create, :update, :destroy ]
     end
   end
 end
