@@ -18,6 +18,10 @@ require "rails/test_unit/railtie"
 # you've limited to :test, :development, or :production.
 Bundler.require(*Rails.groups)
 
+# Loaded explicitly so config.middleware.use can reference the class at boot
+# (app/middleware is not yet autoloaded when Application is defined).
+require_relative "../app/middleware/jwt_authentication"
+
 module CraftitApi
   class Application < Rails::Application
     # Initialize configuration defaults for originally generated Rails version.
@@ -50,5 +54,8 @@ module CraftitApi
         routing_specs: false
       g.factory_bot dir: "spec/factories"
     end
+
+    # JWT authentication middleware — extracts auth_user_id from Bearer token
+    config.middleware.use ::JwtAuthentication
   end
 end

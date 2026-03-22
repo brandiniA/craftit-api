@@ -22,6 +22,14 @@ module Api
           status: :bad_request
         )
       end
+
+      def current_auth_user_id
+        request.env["auth_user_id"]
+      end
+
+      def authenticate!
+        render_unauthorized unless current_auth_user_id
+      end
     end
   end
 end
