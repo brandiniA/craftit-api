@@ -6,13 +6,13 @@ RSpec.describe InventoryService do
 
   describe ".reserve!" do
     it "increments reserved_stock" do
-      InventoryService.reserve!(inventory, 3)
+      described_class.reserve!(inventory, 3)
       expect(inventory.reload.reserved_stock).to eq(3)
     end
 
     it "raises error when insufficient stock" do
       expect do
-        InventoryService.reserve!(inventory, 15)
+        described_class.reserve!(inventory, 15)
       end.to raise_error(InventoryService::InsufficientStockError)
     end
   end
@@ -21,7 +21,7 @@ RSpec.describe InventoryService do
     it "decrements both stock and reserved_stock" do
       inventory.update!(reserved_stock: 3)
 
-      InventoryService.confirm!(inventory, 3)
+      described_class.confirm!(inventory, 3)
       inventory.reload
 
       expect(inventory.stock).to eq(7)
@@ -33,7 +33,7 @@ RSpec.describe InventoryService do
     it "decrements reserved_stock" do
       inventory.update!(reserved_stock: 3)
 
-      InventoryService.release!(inventory, 3)
+      described_class.release!(inventory, 3)
       expect(inventory.reload.reserved_stock).to eq(0)
     end
   end
