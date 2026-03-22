@@ -1,0 +1,26 @@
+# Local PostgreSQL (parity with Supabase / production Postgres).
+#
+#   docker compose up -d
+#   bin/rails db:prepare
+#
+# Connection defaults match config/database.yml (postgres/postgres@localhost:5432).
+
+services:
+  postgres:
+    image: postgres:17-alpine
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: craftit_api_development
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  postgres_data:
