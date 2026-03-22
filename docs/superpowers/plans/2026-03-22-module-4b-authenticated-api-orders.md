@@ -14,6 +14,28 @@
 
 ---
 
+## Implementation notes (reference)
+
+These details match the `feature/implementation-plans` implementation. Earlier snippets in this document may still show draft code; treat this section as the source of truth for routing and parameters.
+
+### Routes and parameters
+
+| Topic | Pitfall | Actual choice |
+|--------|---------|----------------|
+| **Shipment under orders** | Nesting `resource :shipment` under `resources :orders, param: :order_number` makes Rails use a param like `order_order_number` for the parent segment. | Use a **member** route: `get "shipment", to: "shipments#show", on: :member` inside `resources :orders, …`. URL: `GET /api/v1/orders/:order_number/shipment`. In `ShipmentsController`, use **`params[:order_number]`** (not `params[:id]`). |
+| **Reviews under products** | Assuming the nested param is still named `slug`. | With `resources :reviews` nested under `resources :products, param: :slug`, the path is still `/api/v1/products/<slug>/reviews`, but the **request param key** is **`product_slug`**. Resolve the product with `Product.friendly.find(params[:product_slug])`. |
+| **Serializers in `Api::V1`** | Omitting namespace for top-level serializer classes. | Use **`::OrderSerializer`**, **`::OrderDetailSerializer`**, **`::ShipmentSerializer`**, **`::ReviewSerializer`** in controllers (repo convention). |
+
+### OrderService: sequential order number example
+
+`generate_order_number` derives the suffix from existing rows for that day. Two back-to-back calls with **no** `Order` rows yet both see count `0` and can return the **same** number. The spec should **persist** an order with the first generated `order_number`, then call `generate_order_number` again, so the second value is strictly greater.
+
+### Tooling
+
+Service specs were adjusted for **RuboCop** (`described_class`, `aggregate_failures`, fewer memoized helpers in a single example group).
+
+---
+
 ## File Structure
 
 ```
@@ -275,6 +297,7 @@ RSpec.describe OrderService do
 
     it "generates sequential numbers for same day" do
       n1 = OrderService.generate_order_number
+      create(:order, order_number: n1)
       n2 = OrderService.generate_order_number
 
       seq1 = n1.split("-").last.to_i
@@ -505,10 +528,12 @@ git commit -m "feat: add Order, OrderDetail, OrderItem, Shipment serializers"
 In `config/routes.rb`, inside `namespace :v1`, add:
 
 ```ruby
-      resources :orders, only: [ :index, :show, :create ], param: :order_number do
-        resource :shipment, only: [ :show ], on: :member
+      resources :orders, only: %i[index show create], param: :order_number do
+        get "shipment", to: "shipments#show", on: :member
       end
 ```
+
+Use a **member** `shipment` route so `params[:order_number]` stays a single segment (see **Implementation notes** above). A nested singular `resource :shipment` would expose an awkward parent param name (`order_order_number`).
 
 - [ ] **Step 2: Write request specs**
 
@@ -635,7 +660,7 @@ module Api
         pagy, records = pagy(orders)
 
         render_success(
-          OrderSerializer.new(records).serializable_hash[:data],
+          ::OrderSerializer.new(records).serializable_hash[:data],
           meta: pagination_meta(pagy)
         )
       end
@@ -645,7 +670,7 @@ module Api
           .includes(:order_items, :payment, :shipment)
           .find_by!(order_number: params[:order_number])
 
-        render_success(OrderDetailSerializer.new(order).serializable_hash[:data])
+        render_success(::OrderDetailSerializer.new(order).serializable_hash[:data])
       end
 
       def create
@@ -658,7 +683,7 @@ module Api
           customer_email: params[:customer_email]
         )
 
-        render_created(OrderDetailSerializer.new(order).serializable_hash[:data])
+        render_created(::OrderDetailSerializer.new(order).serializable_hash[:data])
       rescue OrderService::EmptyCartError => e
         render_error(code: "validation_error", message: e.message, status: :unprocessable_entity)
       rescue InventoryService::InsufficientStockError => e
@@ -742,12 +767,12 @@ module Api
 
       def show
         order = current_customer_profile.orders
-          .find_by!(order_number: params[:id])
+          .find_by!(order_number: params[:order_number])
 
         shipment = order.shipment
         return render_not_found("No shipment found for this order") unless shipment
 
-        render_success(ShipmentSerializer.new(shipment).serializable_hash[:data])
+        render_success(::ShipmentSerializer.new(shipment).serializable_hash[:data])
       end
     end
   end
@@ -829,12 +854,12 @@ Run: `bundle exec rspec spec/requests/api/v1/reviews_create_spec.rb`
 In `config/routes.rb`, update the products resource to include review creation:
 
 ```ruby
-      resources :products, only: [ :index, :show ], param: :slug do
-        resources :reviews, only: [ :index, :create ], on: :member
+      resources :products, only: %i[index show], param: :slug do
+        resources :reviews, only: %i[index create]
       end
 ```
 
-Note: The `index` action remains public (no auth), while `create` requires auth (handled in controller).
+Nested `resources :reviews` is valid here (no `on: :member` on the inner resource). The `index` action remains public (no auth), while `create` requires auth (handled in the controller).
 
 - [ ] **Step 4: Update ReviewsController with create action**
 
@@ -844,12 +869,12 @@ Add to `app/controllers/api/v1/reviews_controller.rb`:
       before_action :authenticate!, only: [ :create ]
 
       def create
-        product = Product.friendly.find(params[:id])
+        product = ::Product.friendly.find(params[:product_slug])
         review = product.reviews.build(review_params)
         review.customer_profile = current_customer_profile
 
         if review.save
-          render_created(ReviewSerializer.new(review).serializable_hash[:data])
+          render_created(::ReviewSerializer.new(review).serializable_hash[:data])
         else
           render_validation_error(review)
         end
