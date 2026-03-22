@@ -20,6 +20,10 @@ FactoryBot.define do
       }
     end
 
+    trait :pending do
+      status { :pending }
+    end
+
     trait :paid do
       status { :paid }
     end

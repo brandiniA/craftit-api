@@ -27,7 +27,15 @@ Rails.application.routes.draw do
       resources :addresses, only: [ :index, :create, :update, :destroy ]
 
       resources :orders, only: %i[index show create], param: :order_number do
+        post "pay", on: :member, to: "payments#create"
         get "shipment", to: "shipments#show", on: :member
+      end
+
+      post "webhooks/payment", to: "webhooks#payment"
+
+      namespace :dev do
+        post "simulated_payments/:provider_payment_id/approve", to: "simulated_payments#approve"
+        post "simulated_payments/:provider_payment_id/reject", to: "simulated_payments#reject"
       end
 
       namespace :admin do
