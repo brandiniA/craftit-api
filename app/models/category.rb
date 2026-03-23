@@ -1,3 +1,35 @@
+# <rails-lens:schema:begin>
+# table = "categories"
+# database_dialect = "PostgreSQL"
+#
+# columns = [
+#   { name = "id", type = "integer", pk = true, null = false },
+#   { name = "created_at", type = "datetime", null = false },
+#   { name = "description", type = "text" },
+#   { name = "image_url", type = "string" },
+#   { name = "name", type = "string", null = false },
+#   { name = "parent_category_id", type = "integer" },
+#   { name = "position", type = "integer", default = 0 },
+#   { name = "slug", type = "string", null = false },
+#   { name = "updated_at", type = "datetime", null = false }
+# ]
+#
+# indexes = [
+#   { name = "index_categories_on_parent_category_id", columns = ["parent_category_id"] },
+#   { name = "index_categories_on_slug", columns = ["slug"], unique = true }
+# ]
+#
+# foreign_keys = [
+#   { column = "parent_category_id", references_table = "categories", references_column = "id", name = "fk_rails_b7f1bb9825" }
+# ]
+#
+# [callbacks]
+# before_validation = [{ method = "set_slug" }]
+# after_validation = [{ method = "unset_slug_if_invalid" }]
+# before_save = [{ method = "set_slug" }]
+#
+# notes = ["parent_category:INVERSE_OF", "subcategories:N_PLUS_ONE", "products:N_PLUS_ONE", "description:NOT_NULL", "image_url:NOT_NULL", "position:NOT_NULL", "image_url:LIMIT", "name:LIMIT", "slug:LIMIT", "description:STORAGE"]
+# <rails-lens:schema:end>
 # == Schema Information
 #
 # Table name: categories

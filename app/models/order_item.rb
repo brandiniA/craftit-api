@@ -1,3 +1,30 @@
+# <rails-lens:schema:begin>
+# table = "order_items"
+# database_dialect = "PostgreSQL"
+#
+# columns = [
+#   { name = "id", type = "integer", pk = true, null = false },
+#   { name = "created_at", type = "datetime", null = false },
+#   { name = "order_id", type = "integer", null = false },
+#   { name = "price_snapshot", type = "decimal", null = false },
+#   { name = "product_id", type = "integer", null = false },
+#   { name = "product_name_snapshot", type = "string", null = false },
+#   { name = "quantity", type = "integer", null = false },
+#   { name = "updated_at", type = "datetime", null = false }
+# ]
+#
+# indexes = [
+#   { name = "index_order_items_on_order_id", columns = ["order_id"] },
+#   { name = "index_order_items_on_product_id", columns = ["product_id"] }
+# ]
+#
+# foreign_keys = [
+#   { column = "order_id", references_table = "orders", references_column = "id", name = "fk_rails_e3cb28f071" },
+#   { column = "product_id", references_table = "products", references_column = "id", name = "fk_rails_f1a29ddd47" }
+# ]
+#
+# notes = ["product_name_snapshot:LIMIT"]
+# <rails-lens:schema:end>
 # == Schema Information
 #
 # Table name: order_items

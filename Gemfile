@@ -16,6 +16,9 @@ gem "tzinfo-data", platforms: %i[ windows jruby ]
 # Reduces boot times through caching; required in config/boot.rb
 gem "bootsnap", require: false
 
+# Load environment variables from .env
+gem "dotenv-rails", groups: [:development, :test]
+
 # Use Rack CORS for handling Cross-Origin Resource Sharing (CORS), making cross-origin Ajax possible
 gem "rack-cors"
 
@@ -61,6 +64,6 @@ group :development, :test do
 end
 
 group :development do
-  # Schema annotations in model files
-  gem "annotate"
+  # Schema annotations in model files (Rails Lens - modern alternative to annotate)
+  gem "rails_lens"
 end

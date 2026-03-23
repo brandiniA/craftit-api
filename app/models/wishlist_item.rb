@@ -1,3 +1,26 @@
+# <rails-lens:schema:begin>
+# table = "wishlist_items"
+# database_dialect = "PostgreSQL"
+#
+# columns = [
+#   { name = "id", type = "integer", pk = true, null = false },
+#   { name = "created_at", type = "datetime", null = false },
+#   { name = "customer_profile_id", type = "integer", null = false },
+#   { name = "product_id", type = "integer", null = false },
+#   { name = "updated_at", type = "datetime", null = false }
+# ]
+#
+# indexes = [
+#   { name = "index_wishlist_items_on_customer_profile_id", columns = ["customer_profile_id"] },
+#   { name = "index_wishlist_items_on_customer_profile_id_and_product_id", columns = ["customer_profile_id", "product_id"], unique = true },
+#   { name = "index_wishlist_items_on_product_id", columns = ["product_id"] }
+# ]
+#
+# foreign_keys = [
+#   { column = "customer_profile_id", references_table = "customer_profiles", references_column = "id", name = "fk_rails_238fbebe4c" },
+#   { column = "product_id", references_table = "products", references_column = "id", name = "fk_rails_d31985edcf" }
+# ]
+# <rails-lens:schema:end>
 # == Schema Information
 #
 # Table name: wishlist_items

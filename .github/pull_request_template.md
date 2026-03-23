@@ -17,7 +17,7 @@
 - [ ] `bin/brakeman --no-pager`
 - [ ] `bin/bundler-audit`
 - [ ] `bin/rubocop`
-- [ ] `RAILS_ENV=test DATABASE_URL=postgres://postgres:postgres@localhost:5432 bin/rails db:test:prepare test` (or your local test DB URL)
+- [ ] `RAILS_ENV=test POSTGRES_URL=postgres://postgres:postgres@localhost:5432 bin/rails db:test:prepare test` (or your local test DB URL)
 
 ## Checklist
 

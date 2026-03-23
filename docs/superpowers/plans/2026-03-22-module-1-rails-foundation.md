@@ -870,7 +870,7 @@ Create `.env.example`:
 
 ```bash
 # Database
-DATABASE_URL=postgres://postgres:postgres@localhost:5432/craftit_api_development
+POSTGRES_URL=postgres://postgres:postgres@localhost:5432/craftit_api_development
 
 # CORS — comma-separated origins allowed to call this API
 ALLOWED_ORIGINS=http://localhost:3000

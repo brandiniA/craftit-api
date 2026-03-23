@@ -137,7 +137,7 @@ Copy `.env.example` to `.env` and configure:
 ### Database
 
 ```bash
-DATABASE_URL=postgres://postgres:postgres@localhost:5432/craftit_api_development
+POSTGRES_URL=postgres://postgres:postgres@localhost:5432/craftit_api_development
 ```
 
 **Production:** Use Supabase PostgreSQL or managed Postgres (same schema compatibility).

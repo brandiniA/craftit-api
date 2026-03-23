@@ -160,7 +160,7 @@ For production, update `.env` with your frontend domain.
 See `.env.example` for all required variables.
 
 **Key Variables:**
-- `DATABASE_URL` — Postgres connection string
+- `POSTGRES_URL` — Postgres connection string
 - `ALLOWED_ORIGINS` — CORS whitelist
 - `JWKS_URL` — Better Auth JWKS endpoint (e.g., `http://localhost:3000/api/auth/jwks`)
 - `JWT_ALGORITHM` — JWT algorithm (default: `RS256`)

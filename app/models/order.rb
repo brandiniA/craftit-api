@@ -1,3 +1,41 @@
+# <rails-lens:schema:begin>
+# table = "orders"
+# database_dialect = "PostgreSQL"
+#
+# columns = [
+#   { name = "id", type = "integer", pk = true, null = false },
+#   { name = "created_at", type = "datetime", null = false },
+#   { name = "customer_email_snapshot", type = "string" },
+#   { name = "customer_name_snapshot", type = "string" },
+#   { name = "customer_profile_id", type = "integer", null = false },
+#   { name = "order_number", type = "string", null = false },
+#   { name = "shipping_address_snapshot", type = "jsonb", default = "{}" },
+#   { name = "shipping_cost", type = "decimal", null = false, default = 0.0 },
+#   { name = "status", type = "integer", null = false, default = 0 },
+#   { name = "subtotal", type = "decimal", null = false },
+#   { name = "tax", type = "decimal", null = false, default = 0.0 },
+#   { name = "tax_rate_snapshot", type = "decimal", null = false, default = 0.16 },
+#   { name = "total", type = "decimal", null = false },
+#   { name = "updated_at", type = "datetime", null = false }
+# ]
+#
+# indexes = [
+#   { name = "index_orders_on_customer_profile_id", columns = ["customer_profile_id"] },
+#   { name = "index_orders_on_order_number", columns = ["order_number"], unique = true }
+# ]
+#
+# foreign_keys = [
+#   { column = "customer_profile_id", references_table = "customer_profiles", references_column = "id", name = "fk_rails_169bf452a1" }
+# ]
+#
+# [enums]
+# status = { pending = 0, paid = 1, processing = 2, shipped = 3, delivered = 4, cancelled = 5 }
+#
+# [callbacks]
+# after_initialize = [{ method = "aasm_ensure_initial_state" }]
+#
+# notes = ["order_items:N_PLUS_ONE", "customer_email_snapshot:NOT_NULL", "customer_name_snapshot:NOT_NULL", "shipping_address_snapshot:NOT_NULL", "customer_email_snapshot:LIMIT", "customer_name_snapshot:LIMIT", "order_number:LIMIT", "customer_email_snapshot:INDEX", "status:INDEX"]
+# <rails-lens:schema:end>
 # == Schema Information
 #
 # Table name: orders

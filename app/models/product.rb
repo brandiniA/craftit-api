@@ -1,3 +1,40 @@
+# <rails-lens:schema:begin>
+# table = "products"
+# database_dialect = "PostgreSQL"
+#
+# columns = [
+#   { name = "id", type = "integer", pk = true, null = false },
+#   { name = "category_id", type = "integer" },
+#   { name = "compare_at_price", type = "decimal" },
+#   { name = "created_at", type = "datetime", null = false },
+#   { name = "description", type = "text" },
+#   { name = "is_active", type = "boolean", null = false, default = true },
+#   { name = "is_featured", type = "boolean", null = false },
+#   { name = "name", type = "string", null = false },
+#   { name = "price", type = "decimal", null = false },
+#   { name = "sku", type = "string", null = false },
+#   { name = "slug", type = "string", null = false },
+#   { name = "updated_at", type = "datetime", null = false }
+# ]
+#
+# indexes = [
+#   { name = "index_products_on_category_id", columns = ["category_id"] },
+#   { name = "index_products_on_category_id_and_is_active", columns = ["category_id", "is_active"] },
+#   { name = "index_products_on_sku", columns = ["sku"], unique = true },
+#   { name = "index_products_on_slug", columns = ["slug"], unique = true }
+# ]
+#
+# foreign_keys = [
+#   { column = "category_id", references_table = "categories", references_column = "id", name = "fk_rails_fb915499a4" }
+# ]
+#
+# [callbacks]
+# before_validation = [{ method = "set_slug" }]
+# after_validation = [{ method = "unset_slug_if_invalid" }]
+# before_save = [{ method = "set_slug" }]
+#
+# notes = ["index_products_on_category_id:REDUND_IDX", "images:INVERSE_OF", "images:N_PLUS_ONE", "cart_items:N_PLUS_ONE", "wishlist_items:N_PLUS_ONE", "reviews:N_PLUS_ONE", "order_items:N_PLUS_ONE", "compare_at_price:NOT_NULL", "description:NOT_NULL", "name:LIMIT", "sku:LIMIT", "slug:LIMIT", "description:STORAGE"]
+# <rails-lens:schema:end>
 # == Schema Information
 #
 # Table name: products

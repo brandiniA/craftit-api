@@ -1,3 +1,35 @@
+# <rails-lens:schema:begin>
+# table = "shipments"
+# database_dialect = "PostgreSQL"
+#
+# columns = [
+#   { name = "id", type = "integer", pk = true, null = false },
+#   { name = "carrier", type = "string" },
+#   { name = "created_at", type = "datetime", null = false },
+#   { name = "estimated_delivery", type = "date" },
+#   { name = "order_id", type = "integer", null = false },
+#   { name = "status", type = "integer", null = false, default = 0 },
+#   { name = "tracking_number", type = "string" },
+#   { name = "tracking_url", type = "string" },
+#   { name = "updated_at", type = "datetime", null = false }
+# ]
+#
+# indexes = [
+#   { name = "index_shipments_on_order_id", columns = ["order_id"] }
+# ]
+#
+# foreign_keys = [
+#   { column = "order_id", references_table = "orders", references_column = "id", name = "fk_rails_9892d6a938" }
+# ]
+#
+# [enums]
+# status = { preparing = 0, shipped = 1, in_transit = 2, delivered = 3 }
+#
+# [callbacks]
+# after_initialize = [{ method = "aasm_ensure_initial_state" }]
+#
+# notes = ["carrier:NOT_NULL", "estimated_delivery:NOT_NULL", "tracking_number:NOT_NULL", "tracking_url:NOT_NULL", "carrier:LIMIT", "tracking_number:LIMIT", "tracking_url:LIMIT", "status:INDEX"]
+# <rails-lens:schema:end>
 # == Schema Information
 #
 # Table name: shipments

@@ -1,3 +1,25 @@
+# <rails-lens:schema:begin>
+# table = "inventories"
+# database_dialect = "PostgreSQL"
+#
+# columns = [
+#   { name = "id", type = "integer", pk = true, null = false },
+#   { name = "created_at", type = "datetime", null = false },
+#   { name = "low_stock_threshold", type = "integer", null = false, default = 5 },
+#   { name = "product_id", type = "integer", null = false },
+#   { name = "reserved_stock", type = "integer", null = false, default = 0 },
+#   { name = "stock", type = "integer", null = false, default = 0 },
+#   { name = "updated_at", type = "datetime", null = false }
+# ]
+#
+# indexes = [
+#   { name = "index_inventories_on_product_id", columns = ["product_id"], unique = true }
+# ]
+#
+# foreign_keys = [
+#   { column = "product_id", references_table = "products", references_column = "id", name = "fk_rails_e94eb46135" }
+# ]
+# <rails-lens:schema:end>
 # == Schema Information
 #
 # Table name: inventories
