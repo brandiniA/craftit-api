@@ -26,7 +26,7 @@ gem "rack-cors"
 gem "jsonapi-serializer"
 
 # Pagination
-gem "pagy", "~> 9"
+gem "pagy", "~> 43"
 
 # JWT verification
 gem "jwt", "~> 2.10"
