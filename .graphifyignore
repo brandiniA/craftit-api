@@ -1,0 +1,16 @@
+AGENTS.md
+CLAUDE.md
+.gemini/
+.opencode/
+.claude/
+.cursor/
+vendor/
+tmp/
+log/
+storage/
+public/
+db/schema.rb
+db/migrate/
+graphify-out/
+spec/
+Gemfile.lock
