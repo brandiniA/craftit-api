@@ -35,7 +35,7 @@ gem "jwt", "~> 2.10"
 gem "faraday", "~> 2.12"
 
 # Slugs
-gem "friendly_id", "~> 5.5"
+gem "friendly_id", "~> 5.7"
 
 # State machines (orders, shipments)
 gem "aasm", "~> 5.5"
