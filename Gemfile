@@ -29,7 +29,7 @@ gem "jsonapi-serializer"
 gem "pagy", "~> 9"
 
 # JWT verification
-gem "jwt", "~> 2.10"
+gem "jwt", "~> 3.2"
 
 # HTTP client (for JWKS fetching)
 gem "faraday", "~> 2.12"
