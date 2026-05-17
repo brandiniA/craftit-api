@@ -32,7 +32,7 @@ gem "pagy", "~> 9"
 gem "jwt", "~> 2.10"
 
 # HTTP client (for JWKS fetching)
-gem "faraday", "~> 2.12"
+gem "faraday", "~> 2.14"
 
 # Slugs
 gem "friendly_id", "~> 5.5"
